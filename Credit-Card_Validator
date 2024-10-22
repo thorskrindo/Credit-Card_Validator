@@ -1,0 +1,68 @@
+/**
+ * Author: Thor Skrindo 
+ * Assignment: Credit Card Validator 
+ * San Francisco State University; CSC101
+ */
+
+import java.util.Scanner;
+
+public class CreditCardValidator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String userInput;
+        long cardNumber; // Naming the variable as long because of larger numbers
+
+        do {
+            System.out.print("Please enter a credit card number: ");
+            userInput = scanner.nextLine(); //
+        }          while (!isValidNumber(userInput)); // Here I continue prompting for input until a valid number is entered
+
+        cardNumber = Long.parseLong(userInput); // Here we convert the user input to a long data type
+
+        if (isValidCreditCard(cardNumber)) { // Now, check if the credit card number is valid
+                    System.out.println(cardNumber + " is a valid credit card number.");
+
+        } else {
+
+              System.out.println(cardNumber + " is an invalid credit card number.");
+        }
+    }
+    public static boolean isValidNumber(String input) {
+        if (!input.matches("\\d+")) { // Here, check if the input is a sequence of digits
+            System.out.println("You did not enter a number");
+                 return false; // If not, it is not a valid number
+        }
+                         return true; // If the input appears to be all digits, it's a valid number
+    }
+
+    public static boolean isValidCreditCard(long cardNumber) {
+             String cardNumberStr = Long.toString(cardNumber); // Now, convert the long to a string
+
+        if (cardNumberStr.length() < 13 || cardNumberStr.length() > 16) {
+            return false; // For return false, Check if the length of the card number is within the valid range
+        }
+
+           int sum = 0;
+                  boolean doubleDigit = false;
+
+             for (int i = cardNumberStr.length() - 1; i >= 0; i--) { // for loop through the digits of the card number
+
+                    int digit = Character.getNumericValue(cardNumberStr.charAt(i)); // int; Get the digit at the current position
+
+            if (doubleDigit) {
+                digit *= 2; // Double every second digit from right to all the way to the left
+
+                      if (digit > 9) {
+                          digit = digit % 10 + digit / 10; // If doubling results in a two-digit number, add the digits
+                }
+            }
+
+            sum += digit; // Add the current digit to the sum
+                        doubleDigit = !doubleDigit; // Toggle the flag for doubling on the next iteration
+        }
+
+           return sum % 10 == 0; // Check if the sum is divisible by 10 to determine if it's a valid credit card number
+    }
+}
+
+
